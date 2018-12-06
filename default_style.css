@@ -1,0 +1,50 @@
+#graph, #input_area {
+    line-height: 27px;
+    background-color: #FFF;
+    border: 3px solid #AAA;
+    border-radius: 10px;
+}
+
+#input_area {
+    padding: 5px;
+}
+
+#graph {
+    cursor: Crosshair;
+    position: absolute;
+    float: left;
+}
+
+#input_area {
+    float: right;
+}
+
+#y_val, #color, button {
+    padding: 4px 10px;
+    height: 27px;
+    line-height: 20px;
+    background: #FAFAFA;
+    border: 1px solid #DDD;
+    border-radius: 4px;
+}
+
+#color, button {
+    color: #888;
+    cursor: pointer;
+}
+
+#y_val {
+    color: #000;
+}
+
+#color:hover, button:hover {
+    color: #444;
+    background: #EEE;
+    border-color: #CCC;
+}
+
+.checkbox {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}

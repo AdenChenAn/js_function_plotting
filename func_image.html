@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>函数画图工具</title>
+        <link rel="stylesheet" type="text/css" href="default_style.css">
+    </head>
+
+    <body>
+        <canvas id="graph"></canvas>
+        <div id="input_area">
+            <p> y = <input type="text" id="y_val" value="x*sin(x) + 1" onfocus="this.select()" /> </p>
+            <p> 选择颜色: <input type="color" id="color" value="#FF0000" /> </p>
+            <p id="err_msg" style="color:#F00"></p>
+            <label> <input type="checkbox" class="checkbox" id="axis_checkbox" checked="true" />坐标轴</label>
+            <label> <input type="checkbox" class="checkbox" id="axis_mark_checkbox" checked="true" />刻度</label>
+            <label> <input type="checkbox" class="checkbox" id="guide_line_checkbox" checked="true" />网格</label>
+            <br />
+            <button onclick="add_new_graph()" id="new_graph_btn">绘制图像</button>
+            <button onclick="clear_all()">清除</button>
+            <p id="mouse_pos"></p>
+            <p id="other_info"></p>
+        </div>
+        <script type="text/javascript" src="func_image.js"></script>
+    </body>
+</html>
