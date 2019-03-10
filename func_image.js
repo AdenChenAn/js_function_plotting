@@ -14,7 +14,7 @@ var win_width,
     // size of rect to show color of graph
     
     color_using_index        = 0,
-    graph_color              = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF"],
+    graph_color              = ["#770000", "#007700", "#000077", "#777700", "#007777", "#770077"]
     // color for graph (change automatically)
     all_graph                = [];
     // all_graph = [
@@ -45,7 +45,7 @@ var ratio = device_pixel_ratio / backing_store_ratio;
 
 
 function get_page_size() {
-    // get size of page and init/renew val of win_width, win_height
+    // get size of pag
     if (window.innerWidth) {
         win_width = window.innerWidth;
     } else if ((document.body) && (document.body.clientWidth)) {
@@ -134,7 +134,7 @@ function draw_guide_line(gap_size) {
 function get_guide_line_gap_size() {
     var gap = axis_max_width / 5 / default_enlarge_val;
     var digit_num = Math.ceil(Math.log(gap) / Math.log(10));
-    var base = Math.pow(10, digit_num - 2);
+    var base = 10**(digit_num - 2)
     gap = Math.round(gap / base);
     // left with 2 digit
     if (gap % 10 <= 5) {
@@ -286,7 +286,7 @@ function renew_graph() {
     for (var i in all_graph) {
         if (new_graph(all_graph[i][0], all_graph[i][1], default_enlarge_val)) {
             context.fillStyle = "#000000";
-            context.fillText("y=" + all_graph[i][2], text_x, text_y);
+            context.fillText("y = " + all_graph[i][2], text_x, text_y);
             context.fillStyle = all_graph[i][1];
             context.fillRect(rect_x, rect_y, rect_size, rect_size);
             text_y += default_font_size;
@@ -319,14 +319,14 @@ function add_new_graph() {
 
 function adjust_size() {
     get_page_size();
-    graph.style.height             = Math.round(win_height * 0.9) + "px";
-    graph.style.width              = Math.round(win_width * 0.72) + "px";
+    graph.style.height             = Math.round(win_height * 0.95) + "px";
+    graph.style.width              = Math.round(win_width * 0.75) + "px";
     
-    graph.height                   = Math.round(win_height * 0.9) * ratio;
-    graph.width                    = Math.round(win_width * 0.72) * ratio;
+    graph.height                   = Math.round(win_height * 0.95) * ratio;
+    graph.width                    = Math.round(win_width * 0.75) * ratio;
     // 90% * 72%
     
-    input_area.style.height        = Math.round(win_height * 0.9) - 10 + "px"; // -10: padding
+    input_area.style.height        = Math.round(win_height * 0.95) - 10 + "px"; // -10: padding
     input_area.style.width         = Math.round(win_width * 0.2) + "px";
     // 90% * 20%
     
@@ -359,7 +359,7 @@ function clear_all() {
     all_graph = [];
     other_info_label.innerText = "";
     err_msg_label.innerText = "";
-    y_val_input_box.value = "";
+    // y_val_input_box.value = "";
 }
 
 
@@ -371,13 +371,13 @@ graph.addEventListener("mousemove", function(event) {
     y = axis_max_height - y;
     x /= default_enlarge_val;
     y /= default_enlarge_val;
-    document.getElementById("mouse_pos").innerText =
-        "(" + x.toFixed(2) + "," + y.toFixed(2) + ")";
+    document.getElementById("mouse_pos").innerText = "x: " + x.toFixed(2) + ", y:" + y.toFixed(2);
 }, false);
 
 
 y_val_input_box.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
+        // enter
         document.getElementById("new_graph_btn").click();
     }
 }, false);
@@ -385,9 +385,9 @@ y_val_input_box.addEventListener("keyup", function(event) {
 
 function mousewheel_handle(event) {
     if (event.deltaY <= 0) {
-        default_enlarge_val *= 1.1;
+        default_enlarge_val *= 1.03;
     } else {
-        default_enlarge_val /= 1.1;
+        default_enlarge_val /= 1.03;
     }
     renew_graph();
 }

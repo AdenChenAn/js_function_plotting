@@ -10,15 +10,38 @@
         <div id="input_area">
             <p> y = <input type="text" id="y_val" value="x*sin(x) + 1" onfocus="this.select()" /> </p>
             <p> 选择颜色: <input type="color" id="color" value="#FF0000" /> </p>
-            <p id="err_msg" style="color:#F00"></p>
+            <p id="err_msg"></p>
             <label> <input type="checkbox" class="checkbox" id="axis_checkbox" checked="true" />坐标轴</label>
             <label> <input type="checkbox" class="checkbox" id="axis_mark_checkbox" checked="true" />刻度</label>
             <label> <input type="checkbox" class="checkbox" id="guide_line_checkbox" checked="true" />网格</label>
             <br />
+            <br />
             <button onclick="add_new_graph()" id="new_graph_btn">绘制图像</button>
-            <button onclick="clear_all()">清除</button>
+            <button onclick="clear_all()" id="clear_btn">清除</button>
             <p id="mouse_pos"></p>
             <p id="other_info"></p>
+
+            <p id="reference">
+            描述函数时支持的自带函数（将鼠标悬停在上查看解释）：<br />
+            <abbr title="返回数的绝对值">abs(x)</abbr>
+            <abbr title="返回数的反余弦值">acos(x)</abbr>
+            <abbr title="返回数的反正弦值">asin(x)</abbr>
+            <abbr title="以介于 -PI/2 与 PI/2 弧度之间的数值来返回 x 的反正切值">atan(x)</abbr>
+            <abbr title="返回从 x 轴到点 (x,y) 的角度（介于 -PI/2 与 PI/2 弧度之间）">atan2(y,x)</abbr>
+            <abbr title="对数进行上舍入">ceil(x)</abbr>
+            <abbr title="返回数的余弦">cos(x)</abbr>
+            <abbr title="返回 e 的指数">exp(x)</abbr>
+            <abbr title="对数进行下舍入">floor(x)</abbr>
+            <abbr title="返回数的自然对数（底为e）">log(x)</abbr>
+            <abbr title="返回 x 和 y 中的最高值">max(x,y)</abbr>
+            <abbr title="返回 x 和 y 中的最低值">min(x,y)</abbr>
+            <abbr title="返回 x 的 y 次幂">pow(x,y)</abbr>
+            <abbr title="返回 0 ~ 1 之间的随机数">random()</abbr>
+            <abbr title="把数四舍五入为最接近的整数">round(x)</abbr>
+            <abbr title="返回数的正弦">sin(x)</abbr>
+            <abbr title="返回数的平方根">sqrt(x)</abbr>
+            <abbr title="返回角的正切">tan(x)</abbr>
+            </p>
         </div>
         <script type="text/javascript" src="func_image.js"></script>
     </body>

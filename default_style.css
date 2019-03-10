@@ -1,8 +1,13 @@
 #graph, #input_area {
-    line-height: 27px;
+    font-size: 110%;
+    /*line-height: 120%;*/
     background-color: #FFF;
     border: 3px solid #AAA;
-    border-radius: 10px;
+    border-radius: 20px;
+}
+
+body {
+    background-color: #FFF;
 }
 
 #input_area {
@@ -19,32 +24,59 @@
     float: right;
 }
 
-#y_val, #color, button {
+#y_val, button {
     padding: 4px 10px;
     height: 27px;
-    line-height: 20px;
     background: #FAFAFA;
     border: 1px solid #DDD;
-    border-radius: 4px;
+    border-radius: 10px;
 }
 
-#color, button {
-    color: #888;
+#color, .checkbox, button {
     cursor: pointer;
 }
 
-#y_val {
-    color: #000;
+#color {
+    padding: 0px 2px;
+    height: 20px;
+    width: 30%;
+    background: #FAFAFA;
+    border: 1px solid #DDD;
+    border-radius: 5px;
+}
+
+.checkbox {
+    width: 15px;
+    height: 15px;
+}
+
+#new_graph_btn, #clear_btn {
+    width: 30%;
+}
+
+#new_graph_btn {
+    margin-left: 20%;
+}
+
+#y_val, #color, p, label, button {
+    color: #555;
+}
+
+#err_msg {
+    color: #CC0000;
+}
+
+#reference {
+    font-size: 85%;
+    color: #666;
+}
+
+abbr {
+    text-decoration: underline;
 }
 
 #color:hover, button:hover {
     color: #444;
     background: #EEE;
     border-color: #CCC;
-}
-
-.checkbox {
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
 }
