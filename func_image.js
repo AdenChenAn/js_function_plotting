@@ -4,7 +4,7 @@ var win_width,
     axis_max_height,
     axis_max_width,
     // init at adjust_size()
-    default_enlarge_val      = 27,
+    default_enlarge_val      = 30,
     default_graph_width      = 2,
     default_axis_width       = 3,
     default_guide_line_width = 1,
@@ -295,6 +295,7 @@ function renew_graph() {
             all_graph.splice(i, 1);
         }
     }
+    document.getElementById("enlarge_val_input").value = (get_guide_line_gap_size()/default_enlarge_val).toFixed(2);
 }
 
 
@@ -378,16 +379,25 @@ graph.addEventListener("mousemove", function(event) {
 y_val_input_box.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         // enter
-        document.getElementById("new_graph_btn").click();
+        add_new_graph();
+    }
+}, false);
+
+
+document.getElementById("enlarge_val_input").addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        // enter
+        default_enlarge_val = 150/document.getElementById("enlarge_val_input").value;
+        add_new_graph();
     }
 }, false);
 
 
 function mousewheel_handle(event) {
     if (event.deltaY <= 0) {
-        default_enlarge_val *= 1.03;
+        default_enlarge_val *= 1.05;
     } else {
-        default_enlarge_val /= 1.03;
+        default_enlarge_val /= 1.05;
     }
     renew_graph();
 }
@@ -398,6 +408,5 @@ axis_checkbox.onchange       = renew_graph;
 axis_mark_checkbox.onchange  = renew_graph;
 window.onresize              = renew_graph;
 document.onresize            = renew_graph;
-window.onmousewheel          = mousewheel_handle;
-document.onmousewheel        = mousewheel_handle;
+graph.onmousewheel           = mousewheel_handle;
 add_new_graph();

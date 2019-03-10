@@ -32,11 +32,15 @@ body {
     border-radius: 10px;
 }
 
+#enlarge_val_label, #enlarge_val_input {
+    font-size: 85%;
+}
+
 #color, .checkbox, button {
     cursor: pointer;
 }
 
-#color {
+#color, #enlarge_val_input {
     padding: 0px 2px;
     height: 20px;
     width: 30%;
@@ -58,7 +62,11 @@ body {
     margin-left: 20%;
 }
 
-#y_val, #color, p, label, button {
+#axis_checkbox {
+    margin-left: 10%;
+}
+
+#y_val, #color, #enlarge_val_input, p, label, button {
     color: #555;
 }
 
