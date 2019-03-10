@@ -18,9 +18,9 @@
             <br />
             <button onclick="add_new_graph()" id="new_graph_btn">绘制图像</button>
             <button onclick="clear_all()" id="clear_btn">清除</button>
+            <p id="enlarge_val_label">比例尺： 1 : <input type="text" id="enlarge_val_input" onfocus="this.select()" /> </p>
             <p id="mouse_pos"></p>
             <p id="other_info"></p>
-
             <p id="reference">
                 描述函数时支持的自带函数（将鼠标悬停在上查看解释）：<br />
                 <abbr title="返回数的绝对值">abs(x)</abbr>
@@ -42,7 +42,6 @@
                 <abbr title="返回数的平方根">sqrt(x)</abbr>
                 <abbr title="返回角的正切">tan(x)</abbr>
             </p>
-            <p id="enlarge_val_label">比例尺： 1 : <input type="text" id="enlarge_val_input" onfocus="this.select()" /> </p>
         </div>
         <script type="text/javascript" src="func_image.js"></script>
     </body>
