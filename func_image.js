@@ -300,11 +300,13 @@ function renew_graph() {
 
 
 function add_new_graph() {
-    all_graph.push([
-        format_expression(y_val_input_box.value),
-        color_selector.value,
-        y_val_input_box.value
-    ]);
+    if (y_val_input_box.value.length > 0) {
+        all_graph.push([
+            format_expression(y_val_input_box.value),
+            color_selector.value,
+            y_val_input_box.value
+        ]);
+    }
     for (var i = 0; i < all_graph.length - 1; ++i) {
         if (all_graph[i][0] == all_graph[all_graph.length - 1][0]) {
             // when new graph is same as graph that's drawn
