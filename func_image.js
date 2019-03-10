@@ -249,7 +249,7 @@ function new_graph(expression, color, enlarge) {
     // return true if success
     err_msg_label.innerText = "";
     other_info_label.innerText = "";
-    var step = 5/default_enlarge_val;
+    var step = 0.5/default_enlarge_val;
     try {
         if (expression == "") {
             throw "expression empty";
@@ -395,9 +395,9 @@ document.getElementById("enlarge_val_input").addEventListener("keyup", function(
 
 function mousewheel_handle(event) {
     if (event.deltaY <= 0) {
-        default_enlarge_val *= 1.05;
+        default_enlarge_val *= 1.1;
     } else {
-        default_enlarge_val /= 1.05;
+        default_enlarge_val /= 1.1;
     }
     renew_graph();
 }
