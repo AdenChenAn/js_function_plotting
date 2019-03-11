@@ -14,7 +14,7 @@ var win_width,
     // size of rect to show color of graph
     
     color_using_index        = 0,
-    graph_color              = ["#770000", "#007700", "#000077", "#777700", "#007777", "#770077"]
+    graph_color              = ["#770000", "#007700", "#000077", "#777700", "#007777", "#770077"],
     // color for graph (change automatically)
     all_graph                = [];
     // all_graph = [
@@ -134,7 +134,7 @@ function draw_guide_line(gap_size) {
 function get_guide_line_gap_size() {
     var gap = axis_max_width / 5 / default_enlarge_val;
     var digit_num = Math.ceil(Math.log(gap) / Math.log(10));
-    var base = 10**(digit_num - 2)
+    var base = 10**(digit_num - 2);
     gap = Math.round(gap / base);
     // left with 2 digit
     if (gap % 10 <= 5) {
