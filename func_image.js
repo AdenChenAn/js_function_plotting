@@ -14,7 +14,7 @@ var win_width,
     // size of rect to show color of graph
     
     color_using_index        = 0,
-    graph_color              = ["#770000", "#007700", "#000077", "#777700", "#007777", "#770077"],
+    graph_color              = ["#720000", "#007200", "#000072", "#727200", "#007272", "#720072"],
     // color for graph (change automatically)
     all_graph                = [];
     // all_graph = [
@@ -80,11 +80,22 @@ function draw_axis() {
     // draw axis on context
     // origin == middle of context
     context.beginPath();
-    int_move_to(-axis_max_width + 0.5, 0);
-    int_line_to(axis_max_width + 0.5, 0);
-    int_move_to(0, -axis_max_height + 0.5);
-    int_line_to(0, axis_max_height + 0.5);
+    int_move_to(-axis_max_width, 0);
+    int_line_to(axis_max_width, 0);
+    int_move_to(0, -axis_max_height);
+    int_line_to(0, axis_max_height);
 
+    var arrow_size = 10;
+
+    int_move_to(0, -axis_max_height);
+    int_line_to(-arrow_size, -axis_max_height + arrow_size);
+    int_move_to(0, -axis_max_height);
+    int_line_to(arrow_size, -axis_max_height + arrow_size);
+
+    int_move_to(axis_max_width, 0);
+    int_line_to(axis_max_width - arrow_size, -arrow_size);
+    int_move_to(axis_max_width, 0);
+    int_line_to(axis_max_width - arrow_size, +arrow_size);
     context.lineWidth = default_axis_width;
     context.strokeStyle = "#000";
     context.stroke();
@@ -97,18 +108,13 @@ function draw_axis_mark(gap_size) {
     var pos;
     var x = -Math.round(axis_max_width/gap_size)*gap_size;
     for (; x <= axis_max_width; x += gap_size) {
-        pos = (x/default_enlarge_val).toFixed(2);
-        if (pos == -0) {
-            pos = 0;
-        }
+        pos = parseFloat((x/default_enlarge_val).toFixed(5));
         context.fillText(String(pos), x + 5, default_axis_mark_size);
     }
     var y = -Math.round(axis_max_height/gap_size)*gap_size;
     for (; y <= axis_max_height; y += gap_size) {
-        pos = (-y/default_enlarge_val).toFixed(2);
-        if (pos != 0) {
-            context.fillText(String(pos), 5, y + default_axis_mark_size);
-        }
+        pos = parseFloat((-y/default_enlarge_val).toFixed(5));
+        context.fillText(String(pos), 5, y + default_axis_mark_size);
     }
 }
 
@@ -116,16 +122,35 @@ function draw_axis_mark(gap_size) {
 function draw_guide_line(gap_size) {
     var x = -Math.round(axis_max_width/gap_size)*gap_size;
     for (; x <= axis_max_width; x += gap_size) {
-        int_move_to(x, -axis_max_height);
-        int_line_to(x, axis_max_height);
+        if (guide_line_checkbox.checked) {
+            int_move_to(x, -axis_max_height);
+            int_line_to(x, axis_max_height);
+        }
+        else
+        {
+            int_move_to(x, -15);
+            int_line_to(x, 15);
+        }
     }
-
     var y = -Math.round(axis_max_height/gap_size)*gap_size;
     for (; y <= axis_max_height; y += gap_size) {
-        int_move_to(-axis_max_width, y);
-        int_line_to(axis_max_width, y);
+        if (guide_line_checkbox.checked) {
+            int_move_to(-axis_max_width, y);
+            int_line_to(axis_max_width, y);
+        }
+        else
+        {
+            int_move_to(-15, y);
+            int_line_to(15, y);
+        }
     }
-    context.lineWidth = default_guide_line_width;
+    if (guide_line_checkbox.checked) {
+        context.lineWidth = default_guide_line_width;
+    }
+    else
+    {
+        context.lineWidth = default_axis_width;
+    }
     context.strokeStyle = "#000";
     context.stroke();
 }
@@ -166,6 +191,10 @@ function format_expression(expression) {
                     }
                 }
             })
+        .replace(/-[a-zA-z]/g, 
+            function(sub_expression) {
+                return "-1*" + sub_expression[1];
+            })// "-x" -> "-1*x"
         // Math.constant
         .replace(/\be\b/g, "Math.E")
         .replace(/\bpi\b/g, "Math.PI")
@@ -180,6 +209,7 @@ function format_expression(expression) {
         .replace(/\bexp\b/g, "Math.exp")
         .replace(/\bfloor\b/g, "Math.floor")
         .replace(/\blog\b/g, "Math.log")
+        .replace(/\bln\b/g, "Math.log")
         .replace(/\bmax\b/g, "Math.max")
         .replace(/\bmin\b/g, "Math.min")
         .replace(/\bpow\b/g, "Math.pow")
@@ -295,7 +325,8 @@ function renew_graph() {
             all_graph.splice(i, 1);
         }
     }
-    document.getElementById("enlarge_val_input").value = (get_guide_line_gap_size()/default_enlarge_val).toFixed(2);
+    var scale = get_guide_line_gap_size()/default_enlarge_val;
+    document.getElementById("enlarge_val_input").value = parseFloat(scale.toFixed(5));
 }
 
 
@@ -348,9 +379,7 @@ function reset_canvas() {
     }
 
     var guide_line_gap_size = get_guide_line_gap_size();
-    if (guide_line_checkbox.checked) {
-        draw_guide_line(guide_line_gap_size);
-    }
+    draw_guide_line(guide_line_gap_size);
     if (axis_mark_checkbox.checked) {
         draw_axis_mark(guide_line_gap_size);
     }
