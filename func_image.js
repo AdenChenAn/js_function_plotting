@@ -126,7 +126,7 @@ function draw_guide_line(gap_size) {
             int_move_to(x, -axis_max_height);
             int_line_to(x, axis_max_height);
         }
-        else
+        else if (axis_mark_checkbox.checked)
         {
             int_move_to(x, -15);
             int_line_to(x, 15);
@@ -138,7 +138,7 @@ function draw_guide_line(gap_size) {
             int_move_to(-axis_max_width, y);
             int_line_to(axis_max_width, y);
         }
-        else
+        else if (axis_mark_checkbox.checked)
         {
             int_move_to(-15, y);
             int_line_to(15, y);
