@@ -1,22 +1,29 @@
 var win_width,
-    win_height,
-    // init at get_page_size()
+    win_height,// init at get_page_size()
     axis_max_height,
-    axis_max_width,
-    // init at adjust_size()
-    default_enlarge_val      = 30,
-    default_graph_width      = 2,
-    default_axis_width       = 3,
-    default_guide_line_width = 1,
-    default_font_size        = 27,
-    default_axis_mark_size   = 20,
-    rect_size                = 20,
-    // size of rect to show color of graph
-    
-    color_using_index        = 0,
-    graph_color              = ["#720000", "#007200", "#000072", "#727200", "#007272", "#720072"],
-    // color for graph (change automatically)
-    all_graph                = [];
+    axis_max_width,// init at adjust_size()
+
+    // config
+    c_enlarge_val        = 30,
+    c_graph_width        = 2,
+    c_axis_width         = 3,
+    c_guide_line_width   = 1,
+    c_font_size          = 27,
+    c_axis_mark_size     = 20,
+    c_rect_size          = 20, // size of rect to show color of graph
+    c_float_prec         = 5,
+    c_graph_prec         = 0.05,
+    c_auto_color_change  = true,
+    c_arrow_size         = 10,
+
+    c_graph_canvas_height = 0.95,
+    c_graph_canvas_width  = 0.75,
+    c_input_area_width    = 0.2,
+
+    color_using_index  = 0,
+    graph_color        = ["#720000", "#007200", "#000072", "#727200", "#007272", "#720072"],
+    // color for graph (change automatically when `c_auto_color_change` === true)
+    all_graph          = [];
     // all_graph = [
     //     [expression1_in_format, color1, expression1], 
     //     [expression2_in_format, color2, expression2], 
@@ -24,13 +31,19 @@ var win_width,
     // ]
 
 var graph               = document.getElementById("graph"),
+
     y_val_input_box     = document.getElementById("y_val"),
+    enlarge_val_input   = document.getElementById("enlarge_val_input"),
+
     guide_line_checkbox = document.getElementById("guide_line_checkbox"),
     axis_checkbox       = document.getElementById("axis_checkbox"),
     axis_mark_checkbox  = document.getElementById("axis_mark_checkbox"),
+
     other_info_label    = document.getElementById("other_info"),
     err_msg_label       = document.getElementById("err_msg"),
+
     color_selector      = document.getElementById("color"),
+
     input_area          = document.getElementById("input_area"),
     context             = graph.getContext("2d");
 
@@ -48,12 +61,12 @@ function get_page_size() {
     // get size of pag
     if (window.innerWidth) {
         win_width = window.innerWidth;
-    } else if ((document.body) && (document.body.clientWidth)) {
+    } else if (document.body && document.body.clientWidth) {
         win_width = document.body.clientWidth;
     }
     if (window.innerHeight) {
         win_height = window.innerHeight;
-    } else if ((document.body) && (document.body.clientHeight)) {
+    } else if (document.body && document.body.clientHeight) {
         win_height = document.body.clientHeight;
     }
     if (document.documentElement && document.documentElement.clientHeight &&
@@ -64,57 +77,44 @@ function get_page_size() {
 }
 
 
-function int_line_to(x, y) {
-    // round x, y and pass them to context.lineTo
-    context.lineTo(Math.round(x), Math.round(y));
-}
-
-
-function int_move_to(x, y) {
-    // round x, y and pass them to context.moveTo
-    context.moveTo(Math.round(x), Math.round(y));
-}
-
-
 function draw_axis() {
     // draw axis on context
     // origin == middle of context
     context.beginPath();
-    int_move_to(-axis_max_width, 0);
-    int_line_to(axis_max_width, 0);
-    int_move_to(0, -axis_max_height);
-    int_line_to(0, axis_max_height);
+    context.moveTo(-axis_max_width, 0);
+    context.lineTo(axis_max_width, 0);
+    context.moveTo(0, -axis_max_height);
+    context.lineTo(0, axis_max_height);
 
-    var arrow_size = 10;
+    // arrow
+    context.moveTo(0, -axis_max_height);
+    context.lineTo(-c_arrow_size, -axis_max_height + c_arrow_size);
+    context.moveTo(0, -axis_max_height);
+    context.lineTo(c_arrow_size, -axis_max_height + c_arrow_size);
 
-    int_move_to(0, -axis_max_height);
-    int_line_to(-arrow_size, -axis_max_height + arrow_size);
-    int_move_to(0, -axis_max_height);
-    int_line_to(arrow_size, -axis_max_height + arrow_size);
-
-    int_move_to(axis_max_width, 0);
-    int_line_to(axis_max_width - arrow_size, -arrow_size);
-    int_move_to(axis_max_width, 0);
-    int_line_to(axis_max_width - arrow_size, +arrow_size);
-    context.lineWidth = default_axis_width;
+    context.moveTo(axis_max_width, 0);
+    context.lineTo(axis_max_width - c_arrow_size, - c_arrow_size);
+    context.moveTo(axis_max_width, 0);
+    context.lineTo(axis_max_width - c_arrow_size, + c_arrow_size);
+    context.lineWidth = c_axis_width;
     context.strokeStyle = "#000";
     context.stroke();
 }
 
 
 function draw_axis_mark(gap_size) {
-    context.font = default_axis_mark_size + "px arial,sans-serif";
+    context.font = c_axis_mark_size + "px arial,sans-serif";
     context.fillStyle = "#000000";
     var pos;
     var x = -Math.round(axis_max_width/gap_size)*gap_size;
     for (; x <= axis_max_width; x += gap_size) {
-        pos = parseFloat((x/default_enlarge_val).toFixed(5));
-        context.fillText(String(pos), x + 5, default_axis_mark_size);
+        pos = parseFloat((x/c_enlarge_val).toFixed(c_float_prec));
+        context.fillText(String(pos), x + 5, c_axis_mark_size);
     }
     var y = -Math.round(axis_max_height/gap_size)*gap_size;
     for (; y <= axis_max_height; y += gap_size) {
-        pos = parseFloat((-y/default_enlarge_val).toFixed(5));
-        context.fillText(String(pos), 5, y + default_axis_mark_size);
+        pos = parseFloat((-y/c_enlarge_val).toFixed(c_float_prec));
+        context.fillText(String(pos), 5, y + c_axis_mark_size);
     }
 }
 
@@ -123,33 +123,33 @@ function draw_guide_line(gap_size) {
     var x = -Math.round(axis_max_width/gap_size)*gap_size;
     for (; x <= axis_max_width; x += gap_size) {
         if (guide_line_checkbox.checked) {
-            int_move_to(x, -axis_max_height);
-            int_line_to(x, axis_max_height);
+            context.moveTo(x, -axis_max_height);
+            context.lineTo(x, axis_max_height);
         }
         else if (axis_mark_checkbox.checked)
         {
-            int_move_to(x, -15);
-            int_line_to(x, 15);
+            context.moveTo(x, -15);
+            context.lineTo(x, 15);
         }
     }
     var y = -Math.round(axis_max_height/gap_size)*gap_size;
     for (; y <= axis_max_height; y += gap_size) {
         if (guide_line_checkbox.checked) {
-            int_move_to(-axis_max_width, y);
-            int_line_to(axis_max_width, y);
+            context.moveTo(-axis_max_width, y);
+            context.lineTo(axis_max_width, y);
         }
         else if (axis_mark_checkbox.checked)
         {
-            int_move_to(-15, y);
-            int_line_to(15, y);
+            context.moveTo(-15, y);
+            context.lineTo(15, y);
         }
     }
     if (guide_line_checkbox.checked) {
-        context.lineWidth = default_guide_line_width;
+        context.lineWidth = c_guide_line_width;
     }
     else
     {
-        context.lineWidth = default_axis_width;
+        context.lineWidth = c_axis_width;
     }
     context.strokeStyle = "#000";
     context.stroke();
@@ -157,10 +157,10 @@ function draw_guide_line(gap_size) {
 
 
 function get_guide_line_gap_size() {
-    var gap = axis_max_width / 5 / default_enlarge_val;
-    var digit_num = Math.ceil(Math.log(gap) / Math.log(10));
+    var gap = axis_max_width/5/c_enlarge_val;
+    var digit_num = Math.ceil(Math.log(gap)/Math.log(10));
     var base = 10**(digit_num - 2);
-    gap = Math.round(gap / base);
+    gap = Math.round(gap/base);
     // left with 2 digit
     if (gap % 10 <= 5) {
         gap += 5 - gap % 10;
@@ -168,7 +168,7 @@ function get_guide_line_gap_size() {
         gap += 10 - gap % 10;
     }
     // last digit round to 0 or 5
-    return gap*base*default_enlarge_val;
+    return gap*base*c_enlarge_val;
 }
 
 
@@ -264,8 +264,8 @@ function show_graph_info(expression) {
                 other_info_label.innerText += "x1 = x2 = " + -b / (2 * a);
             } else {
                 other_info_label.innerText +=
-                    "x1 = " + ((-b + Math.sqrt(delta)) / (2 * a)).toFixed(2) + "\n" +
-                    "x2 = " + ((-b - Math.sqrt(delta)) / (2 * a)).toFixed(2);
+                    "x1 = " + parseFloat(((-b + Math.sqrt(delta)) / (2 * a)).toFixed(c_float_prec)) + "\n" +
+                    "x2 = " + parseFloat(((-b - Math.sqrt(delta)) / (2 * a)).toFixed(c_float_prec));
             }
             return;
         }// end of match case
@@ -279,7 +279,7 @@ function new_graph(expression, color, enlarge) {
     // return true if success
     err_msg_label.innerText = "";
     other_info_label.innerText = "";
-    var step = 0.5/default_enlarge_val;
+    var step = c_graph_prec/c_enlarge_val;
     try {
         if (expression == "") {
             throw "expression empty";
@@ -288,12 +288,11 @@ function new_graph(expression, color, enlarge) {
         context.beginPath();
         var x = -axis_max_width / enlarge + step;
 
-        int_move_to(x * enlarge, -eval(expression) * enlarge);
+        context.moveTo(x * enlarge, -eval(expression) * enlarge);
         for (; x <= axis_max_width / enlarge; x += step) {
-            int_line_to(x * enlarge, -eval(expression) * enlarge);
+            context.lineTo(x * enlarge, -eval(expression) * enlarge);
         }
-
-        context.lineWidth = default_graph_width;
+        context.lineWidth = c_graph_width;
         context.strokeStyle = color;
         context.stroke();
     } catch (err) {
@@ -307,26 +306,26 @@ function new_graph(expression, color, enlarge) {
 
 function renew_graph() {
     reset_canvas();
-    var text_x = -axis_max_width + default_font_size + rect_size,
-        text_y = -axis_max_height + default_font_size,
-        rect_x = -axis_max_width + default_font_size - rect_size/2,
-        rect_y = -axis_max_height + rect_size/2;
+    var text_x = -axis_max_width + c_font_size + c_rect_size,
+        text_y = -axis_max_height + c_font_size,
+        rect_x = -axis_max_width + c_font_size - c_rect_size/2,
+        rect_y = -axis_max_height + c_rect_size/2;
 
-    context.font = default_font_size + "px arial,sans-serif";
+    context.font = c_font_size + "px arial,sans-serif";
     for (var i in all_graph) {
-        if (new_graph(all_graph[i][0], all_graph[i][1], default_enlarge_val)) {
-            context.fillStyle = "#000000";
+        if (new_graph(all_graph[i][0], all_graph[i][1], c_enlarge_val)) {
+            context.fillStyle = "#000";
             context.fillText("y = " + all_graph[i][2], text_x, text_y);
             context.fillStyle = all_graph[i][1];
-            context.fillRect(rect_x, rect_y, rect_size, rect_size);
-            text_y += default_font_size;
-            rect_y += default_font_size;
+            context.fillRect(rect_x, rect_y, c_rect_size, c_rect_size);
+            text_y += c_rect_size*1.2;
+            rect_y += c_rect_size*1.2;
         } else {
             all_graph.splice(i, 1);
         }
     }
-    var scale = get_guide_line_gap_size()/default_enlarge_val;
-    document.getElementById("enlarge_val_input").value = parseFloat(scale.toFixed(5));
+    var scale = get_guide_line_gap_size()/c_enlarge_val;
+    enlarge_val_input.value = parseFloat(scale.toFixed(c_float_prec));
 }
 
 
@@ -345,23 +344,25 @@ function add_new_graph() {
             break;
         }
     }
-    color_using_index = (color_using_index + 1) % graph_color.length;
-    color_selector.value = graph_color[color_using_index];
+    if (c_auto_color_change) {
+        color_using_index = (color_using_index + 1) % graph_color.length;
+        color_selector.value = graph_color[color_using_index];
+    }
     renew_graph();
 }
 
 
 function adjust_size() {
     get_page_size();
-    graph.style.height             = Math.round(win_height * 0.95) + "px";
-    graph.style.width              = Math.round(win_width * 0.75) + "px";
+    graph.style.height             = Math.round(win_height * c_graph_canvas_height) + "px";
+    graph.style.width              = Math.round(win_width * c_graph_canvas_width) + "px";
     
-    graph.height                   = Math.round(win_height * 0.95) * ratio;
-    graph.width                    = Math.round(win_width * 0.75) * ratio;
+    graph.height                   = Math.round(win_height * c_graph_canvas_height) * ratio;
+    graph.width                    = Math.round(win_width * c_graph_canvas_width) * ratio;
     // 90% * 72%
     
-    input_area.style.height        = Math.round(win_height * 0.95) - 10 + "px"; // -10: padding
-    input_area.style.width         = Math.round(win_width * 0.2) + "px";
+    input_area.style.height        = Math.round(win_height * c_graph_canvas_height) - 10 + "px"; // -10: padding
+    input_area.style.width         = Math.round(win_width * c_input_area_width) + "px";
     // 90% * 20%
     
     axis_max_height                = Math.round(graph.height / 2);
@@ -401,9 +402,9 @@ graph.addEventListener("mousemove", function(event) {
         y = (event.clientY - rect_pos.top) * graph.height / rect_pos.height;
     x -= axis_max_width;
     y = axis_max_height - y;
-    x /= default_enlarge_val;
-    y /= default_enlarge_val;
-    document.getElementById("mouse_pos").innerText = "x: " + x.toFixed(2) + ", y:" + y.toFixed(2);
+    x /= c_enlarge_val;
+    y /= c_enlarge_val;
+    document.getElementById("mouse_pos").innerText = "x: " + x.toFixed(c_float_prec) + ", y:" + y.toFixed(c_float_prec);
 }, false);
 
 
@@ -415,20 +416,20 @@ y_val_input_box.addEventListener("keyup", function(event) {
 }, false);
 
 
-document.getElementById("enlarge_val_input").addEventListener("keyup", function(event) {
+enlarge_val_input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         // enter
-        default_enlarge_val = 150/document.getElementById("enlarge_val_input").value;
-        add_new_graph();
+        c_enlarge_val = 150/enlarge_val_input.value;
+        renew_graph();
     }
 }, false);
 
 
 function mousewheel_handle(event) {
     if (event.deltaY <= 0) {
-        default_enlarge_val *= 1.1;
+        c_enlarge_val *= 1.1;
     } else {
-        default_enlarge_val /= 1.1;
+        c_enlarge_val /= 1.1;
     }
     renew_graph();
 }
