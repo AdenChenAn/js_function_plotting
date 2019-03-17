@@ -81,6 +81,9 @@ body {
 abbr {
     text-decoration: none;
     font-weight: bold;
+    /*display: block;*/
+    float: left;
+    width: 30%;
 }
 
 #color:hover, button:hover {
