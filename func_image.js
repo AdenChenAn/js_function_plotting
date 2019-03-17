@@ -1,34 +1,42 @@
 var win_width,
-    win_height,// init at get_page_size()
+    win_height, // init at get_page_size()
     axis_max_height,
-    axis_max_width,// init at adjust_size()
-
-    // config
-    c_enlarge_val        = 30,
-    c_graph_width        = 2,
-    c_axis_width         = 3,
-    c_guide_line_width   = 1,
-    c_font_size          = 27,
-    c_axis_mark_size     = 20,
-    c_rect_size          = 20, // size of rect to show color of graph
-    c_float_prec         = 5,
-    c_graph_prec         = 0.05,
-    c_auto_color_change  = true,
-    c_arrow_size         = 10,
-
-    c_graph_canvas_height = 0.95,
-    c_graph_canvas_width  = 0.75,
-    c_input_area_width    = 0.2,
-
-    color_using_index  = 0,
-    graph_color        = ["#720000", "#007200", "#000072", "#727200", "#007272", "#720072"],
+    axis_max_width, // init at adjust_size()
     // color for graph (change automatically when `c_auto_color_change` === true)
-    all_graph          = [];
+    color_using_index = 0,
+    graph_color       = ["#720000", "#007200", "#000072", "#727200", "#007272", "#720072"],
+    
+    all_graph         = [];
     // all_graph = [
     //     [expression1_in_format, color1, expression1], 
     //     [expression2_in_format, color2, expression2], 
     //     etc.
     // ]
+
+// config
+var c_enlarge_val         = 30,
+
+    c_graph_line_width    = 2,
+    c_axis_line_width     = 3,
+    c_guide_line_width    = 1,
+
+    c_font_size           = 27,
+    c_axis_mark_font_size = 20,
+
+    c_rect_size           = 20, // size of rect to show color of graph
+
+    c_float_prec          = 5,
+    c_graph_prec          = 0.05,
+    
+    c_arrow_size          = 10,
+    c_scale_line_size     = 15,
+
+    c_show_axis_arrow     = true,
+    c_auto_color_change   = true,
+
+    c_graph_canvas_height = 0.95,
+    c_graph_canvas_width  = 0.75,
+    c_input_area_width    = 0.2;
 
 var graph               = document.getElementById("graph"),
 
@@ -85,36 +93,37 @@ function draw_axis() {
     context.lineTo(axis_max_width, 0);
     context.moveTo(0, -axis_max_height);
     context.lineTo(0, axis_max_height);
-
     // arrow
-    context.moveTo(0, -axis_max_height);
-    context.lineTo(-c_arrow_size, -axis_max_height + c_arrow_size);
-    context.moveTo(0, -axis_max_height);
-    context.lineTo(c_arrow_size, -axis_max_height + c_arrow_size);
+    if (c_show_axis_arrow) {
+        context.moveTo(0, -axis_max_height);
+        context.lineTo(-c_arrow_size, -axis_max_height + c_arrow_size);
+        context.moveTo(0, -axis_max_height);
+        context.lineTo(c_arrow_size, -axis_max_height + c_arrow_size);
 
-    context.moveTo(axis_max_width, 0);
-    context.lineTo(axis_max_width - c_arrow_size, - c_arrow_size);
-    context.moveTo(axis_max_width, 0);
-    context.lineTo(axis_max_width - c_arrow_size, + c_arrow_size);
-    context.lineWidth = c_axis_width;
+        context.moveTo(axis_max_width, 0);
+        context.lineTo(axis_max_width - c_arrow_size, - c_arrow_size);
+        context.moveTo(axis_max_width, 0);
+        context.lineTo(axis_max_width - c_arrow_size, + c_arrow_size);
+    }
+    context.lineWidth = c_axis_line_width;
     context.strokeStyle = "#000";
     context.stroke();
 }
 
 
 function draw_axis_mark(gap_size) {
-    context.font = c_axis_mark_size + "px arial,sans-serif";
+    context.font = c_axis_mark_font_size + "px arial,sans-serif";
     context.fillStyle = "#000000";
     var pos;
     var x = -Math.round(axis_max_width/gap_size)*gap_size;
     for (; x <= axis_max_width; x += gap_size) {
         pos = parseFloat((x/c_enlarge_val).toFixed(c_float_prec));
-        context.fillText(String(pos), x + 5, c_axis_mark_size);
+        context.fillText(String(pos), x + 5, c_axis_mark_font_size);
     }
     var y = -Math.round(axis_max_height/gap_size)*gap_size;
     for (; y <= axis_max_height; y += gap_size) {
         pos = parseFloat((-y/c_enlarge_val).toFixed(c_float_prec));
-        context.fillText(String(pos), 5, y + c_axis_mark_size);
+        context.fillText(String(pos), 5, y + c_axis_mark_font_size);
     }
 }
 
@@ -125,11 +134,9 @@ function draw_guide_line(gap_size) {
         if (guide_line_checkbox.checked) {
             context.moveTo(x, -axis_max_height);
             context.lineTo(x, axis_max_height);
-        }
-        else if (axis_mark_checkbox.checked)
-        {
-            context.moveTo(x, -15);
-            context.lineTo(x, 15);
+        } else if (axis_mark_checkbox.checked) {
+            context.moveTo(x, -c_scale_line_size);
+            context.lineTo(x, c_scale_line_size);
         }
     }
     var y = -Math.round(axis_max_height/gap_size)*gap_size;
@@ -137,19 +144,15 @@ function draw_guide_line(gap_size) {
         if (guide_line_checkbox.checked) {
             context.moveTo(-axis_max_width, y);
             context.lineTo(axis_max_width, y);
-        }
-        else if (axis_mark_checkbox.checked)
-        {
-            context.moveTo(-15, y);
-            context.lineTo(15, y);
+        } else if (axis_mark_checkbox.checked) {
+            context.moveTo(-c_scale_line_size, y);
+            context.lineTo(c_scale_line_size, y);
         }
     }
     if (guide_line_checkbox.checked) {
         context.lineWidth = c_guide_line_width;
-    }
-    else
-    {
-        context.lineWidth = c_axis_width;
+    } else {
+        context.lineWidth = c_axis_line_width;
     }
     context.strokeStyle = "#000";
     context.stroke();
@@ -157,8 +160,8 @@ function draw_guide_line(gap_size) {
 
 
 function get_guide_line_gap_size() {
-    var gap = axis_max_width/5/c_enlarge_val;
-    var digit_num = Math.ceil(Math.log(gap)/Math.log(10));
+    var gap = axis_max_width / 5 / c_enlarge_val;
+    var digit_num = Math.ceil(Math.log(gap) / Math.log(10));
     var base = 10**(digit_num - 2);
     gap = Math.round(gap/base);
     // left with 2 digit
@@ -279,7 +282,7 @@ function new_graph(expression, color, enlarge) {
     // return true if success
     err_msg_label.innerText = "";
     other_info_label.innerText = "";
-    var step = c_graph_prec/c_enlarge_val;
+    var step = c_graph_prec / c_enlarge_val;
     try {
         if (expression == "") {
             throw "expression empty";
@@ -287,12 +290,11 @@ function new_graph(expression, color, enlarge) {
         show_graph_info(expression);
         context.beginPath();
         var x = -axis_max_width / enlarge + step;
-
-        context.moveTo(x * enlarge, -eval(expression) * enlarge);
-        for (; x <= axis_max_width / enlarge; x += step) {
-            context.lineTo(x * enlarge, -eval(expression) * enlarge);
+        context.moveTo(x*enlarge, -eval(expression) * enlarge);
+        for (; x <= axis_max_width / enlarge; x += step * enlarge) {
+            context.lineTo(x*enlarge, -eval(expression) * enlarge);
         }
-        context.lineWidth = c_graph_width;
+        context.lineWidth = c_graph_line_width;
         context.strokeStyle = color;
         context.stroke();
     } catch (err) {
@@ -308,8 +310,8 @@ function renew_graph() {
     reset_canvas();
     var text_x = -axis_max_width + c_font_size + c_rect_size,
         text_y = -axis_max_height + c_font_size,
-        rect_x = -axis_max_width + c_font_size - c_rect_size/2,
-        rect_y = -axis_max_height + c_rect_size/2;
+        rect_x = -axis_max_width + c_font_size - c_rect_size / 2,
+        rect_y = -axis_max_height + c_rect_size / 2;
 
     context.font = c_font_size + "px arial,sans-serif";
     for (var i in all_graph) {
@@ -318,8 +320,8 @@ function renew_graph() {
             context.fillText("y = " + all_graph[i][2], text_x, text_y);
             context.fillStyle = all_graph[i][1];
             context.fillRect(rect_x, rect_y, c_rect_size, c_rect_size);
-            text_y += c_rect_size*1.2;
-            rect_y += c_rect_size*1.2;
+            text_y += c_rect_size * 1.2;
+            rect_y += c_rect_size * 1.2;
         } else {
             all_graph.splice(i, 1);
         }
@@ -329,14 +331,32 @@ function renew_graph() {
 }
 
 
-function add_new_graph() {
-    if (y_val_input_box.value.length > 0) {
-        all_graph.push([
-            format_expression(y_val_input_box.value),
-            color_selector.value,
-            y_val_input_box.value
-        ]);
+function sth_fun(func) {
+    if (func == "Aden") {
+        window.open("https://AdenChenAn.github.io");
+        return true;
+    } else if (func == "github") {
+        window.open("https://github.com/AdenChenAn/js_function_plotting");
+        return true;
     }
+    return false;
+}
+
+
+function add_new_graph(func) {
+    if (sth_fun(func)) {
+        return ;
+    }
+
+    if (func.length <= 0) {
+        renew_graph();
+        return ;
+    }
+    all_graph.push([
+        format_expression(func),
+        color_selector.value,
+        y_val_input_box.value
+    ]);
     for (var i = 0; i < all_graph.length - 1; ++i) {
         if (all_graph[i][0] == all_graph[all_graph.length - 1][0]) {
             // when new graph is same as graph that's drawn
@@ -354,19 +374,19 @@ function add_new_graph() {
 
 function adjust_size() {
     get_page_size();
-    graph.style.height             = Math.round(win_height * c_graph_canvas_height) + "px";
-    graph.style.width              = Math.round(win_width * c_graph_canvas_width) + "px";
+    graph.style.height      = Math.round(win_height * c_graph_canvas_height) + "px";
+    graph.style.width       = Math.round(win_width * c_graph_canvas_width) + "px";
     
-    graph.height                   = Math.round(win_height * c_graph_canvas_height) * ratio;
-    graph.width                    = Math.round(win_width * c_graph_canvas_width) * ratio;
+    graph.height            = Math.round(win_height * c_graph_canvas_height) * ratio;
+    graph.width             = Math.round(win_width * c_graph_canvas_width) * ratio;
     // 90% * 72%
     
-    input_area.style.height        = Math.round(win_height * c_graph_canvas_height) - 10 + "px"; // -10: padding
-    input_area.style.width         = Math.round(win_width * c_input_area_width) + "px";
+    input_area.style.height = Math.round(win_height * c_graph_canvas_height) - 10 + "px"; // -10: padding
+    input_area.style.width  = Math.round(win_width * c_input_area_width) + "px";
     // 90% * 20%
     
-    axis_max_height                = Math.round(graph.height / 2);
-    axis_max_width                 = Math.round(graph.width / 2);
+    axis_max_height         = Math.round(graph.height / 2);
+    axis_max_width          = Math.round(graph.width / 2);
 }
 
 
@@ -375,12 +395,12 @@ function reset_canvas() {
     adjust_size();
     context.translate(0.5, 0.5);
     context.translate(axis_max_width, axis_max_height);
-    if (axis_checkbox.checked) {
-        draw_axis();
-    }
 
     var guide_line_gap_size = get_guide_line_gap_size();
     draw_guide_line(guide_line_gap_size);
+    if (axis_checkbox.checked) {
+        draw_axis();
+    }
     if (axis_mark_checkbox.checked) {
         draw_axis_mark(guide_line_gap_size);
     }
@@ -392,7 +412,6 @@ function clear_all() {
     all_graph = [];
     other_info_label.innerText = "";
     err_msg_label.innerText = "";
-    // y_val_input_box.value = "";
 }
 
 
@@ -411,7 +430,7 @@ graph.addEventListener("mousemove", function(event) {
 y_val_input_box.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         // enter
-        add_new_graph();
+        add_new_graph(y_val_input_box.value);
     }
 }, false);
 
@@ -441,4 +460,4 @@ axis_mark_checkbox.onchange  = renew_graph;
 window.onresize              = renew_graph;
 document.onresize            = renew_graph;
 graph.onmousewheel           = mousewheel_handle;
-add_new_graph();
+renew_graph();

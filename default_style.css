@@ -14,7 +14,7 @@ body {
 }
 
 #graph {
-    cursor: Crosshair;
+    cursor: crosshair;
     position: absolute;
     float: left;
 }
@@ -79,7 +79,8 @@ body {
 }
 
 abbr {
-    text-decoration: underline;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 #color:hover, button:hover {
