@@ -456,7 +456,7 @@ function mousewheel_handle(event) {
 
 function init_by_arg() {
     var arg = window.document.location.href.toString().split("?")[1];
-    if (typeof(url[1]) == "string") {
+    if (typeof(arg[1]) == "string") {
         var funcs = arg.split(";");
     } else {
         return null;
