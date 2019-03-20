@@ -454,6 +454,17 @@ function mousewheel_handle(event) {
 }
 
 
+function init_by_arg() {
+    var arg = window.document.location.href.toString().split("?")[1];
+    if (typeof(url[1]) == "string") {
+        var funcs = arg.split(";");
+    } else {
+        return null;
+    }
+}
+
+
+init_by_arg();
 guide_line_checkbox.onchange = renew_graph;
 axis_checkbox.onchange       = renew_graph;
 axis_mark_checkbox.onchange  = renew_graph;
