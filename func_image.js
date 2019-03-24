@@ -472,6 +472,9 @@ function init_by_arg() {
     }
     y = unescape(y[2]).split(";");
     console.log(y);
+    for (var i = 0; i < y.length; ++y) {
+        add_new_graph(y[i]);
+    }
 }
 
 
