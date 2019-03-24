@@ -343,7 +343,7 @@ function sth_fun(func) {
 }
 
 
-function add_new_graph(func, color, input_func) {
+function add_new_graph(func, color) {
     if (sth_fun(func)) {
         return ;
     }
@@ -355,13 +355,10 @@ function add_new_graph(func, color, input_func) {
     if (!color) {
         color = color_selector.value;
     }
-    if (!input_func) {
-        input_func = y_val_input_box.value;
-    }
     all_graph.push([
         format_expression(func),
         color,
-        input_func
+        func
     ]);
     for (var i = 0; i < all_graph.length - 1; ++i) {
         if (all_graph[i][0] == all_graph[all_graph.length - 1][0]) {
@@ -478,7 +475,7 @@ function init_by_arg() {
     }
     y = unescape(y[2]).split(";");
     console.log(y);
-    for (var i = 0; i < y.length; ++y) {
+    for (var i = 0; i < y.length; ++i) {
         add_new_graph(y[i]);
     }
 }
