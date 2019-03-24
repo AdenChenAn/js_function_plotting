@@ -9,6 +9,12 @@ body {
     background-color: #FFF;
 }
 
+#qrcode {
+    height: 18%;
+    width: 100%;
+    /*background-color: black;*/
+}
+
 #input_area {
     padding: 5px;
 }
@@ -53,12 +59,12 @@ body {
     height: 15px;
 }
 
-#new_graph_btn, #clear_btn {
+#new_graph_btn, #clear_btn, #qrcode_btn {
     width: 30%;
 }
 
 #new_graph_btn {
-    margin-left: 20%;
+    margin-left: 0px;
 }
 
 #axis_checkbox {
