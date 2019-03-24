@@ -55,11 +55,14 @@ var graph               = document.getElementById("graph"),
     input_area          = document.getElementById("input_area"),
     context             = graph.getContext("2d");
 
-try {
-    var qrcode = new QRCode("qrcode");
-} catch (err) {
-    console.log(err);
-}
+var qrcode = new QRCode("qrcode", {
+    text: "",
+    width: 128,
+    height: 128,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+});
 
 
 var backing_store_ratio = context.webkitBackingStorePixelRatio ||
@@ -489,17 +492,12 @@ function init_by_arg() {
 
 
 function make_qrcode() {
-    try {
-        var text = "https://adenchenan.github.io/js_function_plotting/func_image.html?y=";
-        for (var i = 0; i < all_graph.length - 1; ++i) {
-            text += all_graph[i][0] + ";";
-        }
-        console.log(text);
-        qrcode.makeCode(text);
-    } catch (err) {
-        alert("二维码功能无法在未联网时使用");
-        console.log(err);
+    var text = "https://adenchenan.github.io/js_function_plotting/func_image.html?y=";
+    for (var i = 0; i < all_graph.length - 1; ++i) {
+        text += all_graph[i][0] + ";";
     }
+    console.log(text);
+    qrcode.makeCode(text);
 }
 
 
