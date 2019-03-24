@@ -454,13 +454,19 @@ function mousewheel_handle(event) {
 }
 
 
-function init_by_arg() {
-    var arg = window.document.location.href.toString().split("?");
-    if (typeof(arg[1]) == "string") {
-        var funcs = arg.split(";");
-    } else {
-        return null;
+function get_arg(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+        return unescape(r[2]);
     }
+    return null;
+}
+
+
+function init_by_arg() {
+    var y = get_arg("y").split(";");
+    console.log(y);
 }
 
 
