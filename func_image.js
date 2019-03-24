@@ -465,7 +465,12 @@ function get_arg(name) {
 
 
 function init_by_arg() {
-    var y = get_arg("y").split(";");
+    var reg = new RegExp("(^|&)y=([^&]*)(&|$)", "i");
+    var y = window.location.search.substr(1).match(reg);
+    if (!y) {
+        return null;
+    }
+    y = unescape(y[2]).split(";");
     console.log(y);
 }
 
