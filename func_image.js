@@ -343,7 +343,7 @@ function sth_fun(func) {
 }
 
 
-function add_new_graph(func) {
+function add_new_graph(func, color, input_func) {
     if (sth_fun(func)) {
         return ;
     }
@@ -352,10 +352,16 @@ function add_new_graph(func) {
         renew_graph();
         return ;
     }
+    if (!color) {
+        color = color_selector.value;
+    }
+    if (!input_func) {
+        input_func = y_val_input_box.value;
+    }
     all_graph.push([
         format_expression(func),
-        color_selector.value,
-        y_val_input_box.value
+        color,
+        input_func
     ]);
     for (var i = 0; i < all_graph.length - 1; ++i) {
         if (all_graph[i][0] == all_graph[all_graph.length - 1][0]) {
