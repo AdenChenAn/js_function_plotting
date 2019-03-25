@@ -26,7 +26,7 @@ var c_enlarge_val         = 30,
     c_rect_size           = 20, // size of rect to show color of graph
 
     c_float_prec          = 5,
-    c_graph_prec          = 0.05,
+    c_graph_prec          = 0.1,
     
     c_arrow_size          = 10,
     c_scale_line_size     = 15,
@@ -467,16 +467,6 @@ function mousewheel_handle(event) {
 }
 
 
-function get_arg(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) {
-        return unescape(r[2]);
-    }
-    return null;
-}
-
-
 function init_by_arg() {
     var reg = new RegExp("(^|&)y=([^&]*)(&|$)", "i");
     var y = window.location.search.substr(1).match(reg);
@@ -487,14 +477,15 @@ function init_by_arg() {
     console.log(y);
     for (var i = 0; i < y.length; ++i) {
         add_new_graph(y[i]);
+        console.log(y[i]);
     }
 }
 
 
 function make_qrcode() {
     var text = "https://adenchenan.github.io/js_function_plotting/func_image.html?y=";
-    for (var i = 0; i < all_graph.length - 1; ++i) {
-        text += all_graph[i][0] + ";";
+    for (var i = 0; i < all_graph.length; ++i) {
+        text += all_graph[i][2] + ";";
     }
     console.log(text);
     qrcode.makeCode(text);
