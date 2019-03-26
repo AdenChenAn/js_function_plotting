@@ -36,7 +36,9 @@ var c_enlarge_val         = 30,
 
     c_graph_canvas_height = 0.95,
     c_graph_canvas_width  = 0.75,
-    c_input_area_width    = 0.2;
+    c_input_area_width    = 0.2,
+
+    c_qrcode_size         = 100;
 
 var graph               = document.getElementById("graph"),
 
@@ -57,10 +59,10 @@ var graph               = document.getElementById("graph"),
 
 var qrcode = new QRCode("qrcode", {
     text: "",
-    width: 128,
-    height: 128,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
+    width: c_qrcode_size,
+    height: c_qrcode_size,
+    colorDark : "#000",
+    colorLight : "#FFF",
     correctLevel : QRCode.CorrectLevel.H
 });
 
@@ -392,11 +394,9 @@ function adjust_size() {
     
     graph.height            = Math.round(win_height * c_graph_canvas_height) * ratio;
     graph.width             = Math.round(win_width * c_graph_canvas_width) * ratio;
-    // 90% * 72%
     
     input_area.style.height = Math.round(win_height * c_graph_canvas_height) - 10 + "px"; // -10: padding
     input_area.style.width  = Math.round(win_width * c_input_area_width) + "px";
-    // 90% * 20%
     
     axis_max_height         = Math.round(graph.height / 2);
     axis_max_width          = Math.round(graph.width / 2);
