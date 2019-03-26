@@ -1,22 +1,3 @@
-一个小小的函数画图页面
-
-在描述函数时 支持以下自带函数
-abs(x)
-acos(x)
-asin(x)
-ceil(x)
-cos(x)
-exp(x)
-floor(x)
-log(x)
-max(x,y)
-min(x,y)
-pow(x,y)
-random()
-round(x)
-sin(x)
-sqrt(x)
-tan(x)
-以及常量e和pi
-
-~~markdown test~~
+简单的[在线函数绘图工具](https://adenchenan.github.io/js_function_plotting/func_image.html)
+[github链接](https://github.com/AdenChenAn/js_function_plotting)
+qrcode.js来自[qrcodejs](https://github.com/davidshimjs/qrcodejs)
