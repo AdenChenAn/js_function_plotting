@@ -3,7 +3,6 @@
     <head>
         <title>函数画图工具</title>
         <link rel="stylesheet" type="text/css" href="default_style.css">
-        <script src="qrcode.js"></script>
     </head>
     <body>
         <canvas id="graph"></canvas>
@@ -18,7 +17,7 @@
             <br />
             <button onclick="add_new_graph(y_val_input_box.value)" id="new_graph_btn">绘制图像</button>
             <button onclick="clear_all()" id="clear_btn">清除</button>
-            <button onclick="make_qrcode()" id="qrcode_btn">二维码</button>
+            <button onclick="generate_qrcode()" id="qrcode_btn">二维码</button>
             <p id="enlarge_val_label">比例尺： 1 : <input type="text" id="enlarge_val_input" onfocus="this.select()" /> </p>
             <p id="mouse_pos"></p>
             <p id="other_info"></p>
@@ -45,8 +44,13 @@
                 <abbr title="反余弦函数">acos(x)</abbr>
                 <abbr title="x的反正切函数(介于 -pi/2 与 pi/2 弧度之间的数值)">atan(x)</abbr>
             </p>
+            <!-- qrcode -->
             <div id="qrcode"></div>
+            <!-- qrcode end -->
         </div>
-        <script type="text/javascript" src="func_image.js"></script>
+        <script type="text/javascript" src="qrcode.js"></script>
+        <script type="text/javascript" src="init.js"></script>
+        <script type="text/javascript" src="qrcode_generate.js"></script>
+        <script type="text/javascript" src="main.js"></script>
     </body>
 </html>
